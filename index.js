@@ -32,6 +32,12 @@ async function run() {
       const allBlogs = await blogs.toArray();
       res.send({ status: true, data: allBlogs });
     });
+    app.get("/blogs/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await blogCollection.findOne(query);
+      res.send(result);
+    });
 
     await client.db("admin").command({ ping: 1 });
     console.log(
