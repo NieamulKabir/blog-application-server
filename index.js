@@ -26,6 +26,7 @@ async function run() {
     // Send a ping to confirm a successful connection
     const db = client.db("blogApplication");
     const blogCollection = db.collection("blogs");
+    const commentCollection = db.collection("comments");
 
     app.get("/blogs", async (req, res) => {
       const blogs = blogCollection.find({});
@@ -36,6 +37,16 @@ async function run() {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
       const result = await blogCollection.findOne(query);
+      res.send(result);
+    });
+    app.get("/comments", async (req, res) => {
+      const comments = commentCollection.find({});
+      const allComment = await comments.toArray();
+      res.send({ status: true, data: allComment });
+    });
+    app.post("/comment", async (req, res) => {
+      const comment = req.body;
+      const result = await commentCollection.insertOne(comment);
       res.send(result);
     });
 
