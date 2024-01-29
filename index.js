@@ -28,17 +28,26 @@ async function run() {
     const blogCollection = db.collection("blogs");
     const commentCollection = db.collection("comments");
 
+    //get all blogs
     app.get("/blogs", async (req, res) => {
       const blogs = blogCollection.find({});
       const allBlogs = await blogs.toArray();
       res.send({ status: true, data: allBlogs });
     });
+
+    //get a single blog by id
     app.get("/blogs/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
       const result = await blogCollection.findOne(query);
       res.send(result);
     });
+    //post a blog
+    app.post("/blogs", async(req,res)=>{
+      const blog= req.body
+      const result = await blogCollection.insertOne(blog)
+      res.send(result)
+    })
     app.get("/comments", async (req, res) => {
       const comments = commentCollection.find({});
       const allComment = await comments.toArray();
